@@ -1,4 +1,5 @@
 pipeline{
+    def mvnHome
     agent{
         label any
     }    
@@ -6,12 +7,13 @@ pipeline{
         stage('Git clone or Pull'){
             steps{
                 git 'https://github.com/spring-projects/spring-petclinic.git'
+		mvnHome = tool 'mvn'
             }
         }
         stage('Build'){
             steps{
-                sh 'mvn clean package'
-            }
+			sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+            	}
         }
         stage('Publish'){
             steps{
